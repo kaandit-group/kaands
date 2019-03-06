@@ -1,0 +1,533 @@
+(function($) {
+	"use strict";
+	
+	/////////////////////////////
+	/*STICKY HEADER*/
+	////////////////////////////
+	
+	$(document).on("scroll", function(e) {
+		if ($(this).scrollTop() > 100) {
+			$('header').addClass("sticky");
+		} else {
+			$('header').removeClass("sticky");
+		}
+	});
+	
+	//////////////////////////////////////////
+	/* ADD REVIEW CUSTOM SCRIPT [open/close]*/
+	/////////////////////////////////////////
+	
+	$("#add-review-btn").on("$",function(e){
+	   $("#add-review-form").slideDown();
+	});
+	$("#review-form-close").on("click",function(e){
+	   $("#add-review-form").slideUp();
+	});
+
+	//////////////////////////////////////////
+	/* VERTICAL TABS [with bordered nav]*/
+	/////////////////////////////////////////
+	jQuery('.verticalTab').easyResponsiveTabs({
+	   type: 'vertical',
+	   width: 'auto',
+	   fit: true
+	});
+	
+	/////////////////////////////
+	/* ITEM COUNTER CUSTOM SCRIPT*/
+	////////////////////////////
+	
+	var itemcount= 0;
+	
+	$('#pluss-item').on("click", function(e) {
+	   itemcount++;
+	   $('#total-items').val(itemcount);
+	   return false;
+	});
+	
+	$('#less-item').on("click", function(e) {
+	   itemcount--;
+	   $('#total-items').val(itemcount);
+	   return false;
+	});
+	
+	$('.verticalTab').easyResponsiveTabs({
+	   type: 'vertical',
+	   width: 'auto',
+	   fit: true
+	});
+	
+	/////////////////////////////
+	/* PRODUCT DETAIL*/
+	////////////////////////////
+	
+	jQuery("#product-detail-slider").responsiveSlides({
+	   maxwidth: 1000,
+	   timeout: 3E3,
+	   pager: true,
+	   speed: 700
+	});
+	
+	/////////////////////////////
+	/*PRELOADER*/
+	////////////////////////////
+	
+	jQuery(window).on("load", function(e) { // makes sure the whole site is loaded
+		jQuery("#status").fadeOut(); // will first fade out the loading animation
+		jQuery("#preloader").delay(350).fadeOut("slow"); // will fade out the white DIV that covers the website.
+		jQuery("body").delay(350).css({
+			"overflow": "visible"
+		});
+	})
+	$(function() {
+		parallaxInit('.parallax')
+	});
+	
+	/////////////////////////////
+	/*BACK TO TOP*/
+	////////////////////////////
+	
+	$(document).on("ready", function(e) {
+
+		<!--  Counter Up - Fun Facts -->							 
+		$('ul li').on("click",function(){
+			$('li').removeClass("item-select");
+			$(this).addClass("item-select");
+		});	
+		<!--  Counter Up - Fun Facts -->
+		$(".facts").counterUp({
+			delay: 10,
+			time: 1000
+		});
+		// browser window scroll (in pixels) after which the "back to top" link is shown
+		var offset = 300,
+			//browser window scroll (in pixels) after which the "back to top" link opacity is reduced
+			offset_opacity = 1200,
+			//duration of the top scrolling animation (in ms)
+			scroll_top_duration = 1400,
+			//grab the "back to top" link
+			$back_to_top = $(".cd-top");
+		//hide or show the "back to top" link
+		$(window).on("scroll", function(e) {
+			($(this).scrollTop() > offset) ? $back_to_top.addClass("cd-is-visible"): $back_to_top.removeClass("cd-is-visible cd-fade-out");
+			if ($(this).scrollTop() > offset_opacity) {
+				$back_to_top.addClass("cd-fade-out");
+			}
+		});
+		//smooth scroll to top
+		$back_to_top.on("click", function(event) {
+			event.preventDefault();
+			$("body,html").animate({
+				scrollTop: 0,
+			}, scroll_top_duration);
+		});
+	});
+	
+	
+	///////////////////////////////////
+	/*DATE PICKER AND INPUT HOVER*/
+	//////////////////////////////////
+	
+	// trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+	[].slice.call(document.querySelectorAll("input.input_field")).forEach(function(inputEl) {
+		// in case the input is already filled..
+		// events:
+		inputEl.addEventListener("focus", onInputFocus);
+		inputEl.addEventListener("blur", onInputBlur);
+	});
+
+	function onInputFocus(ev) {
+		classie.add(ev.target.parentNode, "input-filled");
+	}
+
+	function onInputBlur(ev) {
+		if (ev.target.value.trim() === "") {
+			classie.remove(ev.target.parentNode, "input-filled");
+		}
+	}
+	
+	///////////////////////////////////
+	/*STATS*/
+	//////////////////////////////////
+	
+	$(".statistics").waypoint(function(e) {
+		$('#myStat1').circliful();
+		$('#myStat2').circliful();
+		$('#myStat3').circliful();
+		$('#myStat4').circliful();
+	}, {
+		offset: 800,
+		triggerOnce: true
+	});
+	
+	///////////////////////////////////
+	/*DATE PICKER*/
+	//////////////////////////////////
+	
+	$("#datepicker").datepicker({
+		inline: true
+	});
+	[].slice.call(document.querySelectorAll("textarea.input_field")).forEach(function(inputEl) {
+		// in case the input is already filled..
+		if (inputEl.value.trim() !== "") {
+			classie.add(inputEl.parentNode, "input-filled");
+		}
+		// events:
+		inputEl.addEventListener("focus", onInputFocus);
+		inputEl.addEventListener("blur", onInputBlur);
+	});
+	
+	//date picker
+	$("#datepicker").datepicker({
+		inline: true
+	});
+	
+	////////////////////////////////////////////
+	/*APPOINTMENT NEWSLETTER CONTACT FORM*/
+	///////////////////////////////////////////
+	
+	function checkcontact(input) {
+		var pattern1 = /^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+/;
+		if (pattern1.test(input)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+
+	function validateAppointment() {
+		//alert('hi');
+		var errors = "";
+		var app_name = document.getElementById("input-29");
+		var app_email_address = document.getElementById("input-30");
+		var app_date = document.getElementById("datepicker");
+		if (app_name.value == "") {
+			errors += 'Please provide your name.';
+		} else if (app_email_address.value == "") {
+			errors += 'Please provide an email address.';
+		} else if (checkcontact(app_email_address.value) == false) {
+			errors += 'Please provide a valid email address.';
+		} else if (app_date.value == "") {
+			errors += 'Please select an appointment date.';
+		}
+		if (errors) {
+			document.getElementById("error").style.display = "block";
+			document.getElementById("error").innerHTML = errors;
+			return false;
+		} else {
+			$.ajax({
+				type: "POST",
+				url: 'process.php',
+				data: $("#appointment_form").serialize(),
+				success: function(msg) {
+					if (msg == 'success') {
+						document.getElementById("error").style.display = "none";
+						document.getElementById("input-29").value = "";
+						document.getElementById("input-30").value = "";
+						document.getElementById("datepicker").value = "";
+						document.getElementById("input-31").value = "";
+						document.getElementById("textarea").value = "";
+						$("#appointment_form").hide();
+						document.getElementById("success").style.display = "block";
+						document.getElementById("success").innerHTML = "Thank You! We'll contact you shortly.";
+					} else {
+						document.getElementById("error").style.display = "block";
+						document.getElementById("error").innerHTML = "Oops! Something went wrong while prceeding.";
+					}
+				}
+			});
+		}
+	}
+
+
+	function validateSubscription() {
+		//alert('hi');
+		var footer_name = document.getElementById("subscribe_name");
+		var footer_email_address = document.getElementById("subscribe_email");
+		if (footer_name.value == "") {
+			footer_name.className = "input error";
+			return false;
+		} else if (footer_email_address.value == "") {
+			footer_email_address.className = "input error";
+			return false;
+		} else if (checkcontact(footer_email_address.value) == false) {
+			footer_email_address.className = "input error";
+			return false;
+		} else {
+			$.ajax({
+				type: "POST",
+				url: 'process.php',
+				data: $("#subscribe_form").serialize(),
+				success: function(msg) {
+					if (msg == 'success') {
+						footer_name.className = "input";
+						footer_name.value = "";
+						footer_email_address.className = "input";
+						footer_email_address.value = "";
+						$("#subscribe_form").hide();
+						document.getElementById("subscribe_success").style.display = "block";
+						document.getElementById("subscribe_success").innerHTML = "Thank You! We'll contact you shortly.";
+					} else {
+						document.getElementById("subscribe_error").style.display = "block";
+						document.getElementById("subscribe_error").innerHTML = "Oops! Something went wrong while prceeding.";
+					}
+				}
+			});
+		}
+	}
+
+	function removeChecks() {
+		var footer_name = document.getElementById("subscribe_name");
+		var footer_email_address = document.getElementById("subscribe_email");
+		if (footer_name.value != "") {
+			footer_name.className = "input";
+		}
+		if (footer_email_address.value != "" && checkcontact(footer_email_address.value) == true) {
+			footer_email_address.className = "input";
+		}
+	}
+
+	function validateContact() {
+		//alert('hi');
+		var errors = "";
+		var contact_name = document.getElementById("contact_name");
+		var contact_email_address = document.getElementById("contact_email");
+		var contact_subject = document.getElementById("contact_subject");
+		if (contact_name.value == "") {
+			errors += 'Please provide your name.';
+		} else if (contact_email_address.value == "") {
+			errors += 'Please provide an email address.';
+		} else if (checkcontact(contact_email_address.value) == false) {
+			errors += 'Please provide a valid email address.';
+		} else if (contact_subject.value == "") {
+			errors += 'Please provide a subject.';
+		}
+		if (errors) {
+			document.getElementById("error").style.display = "block";
+			document.getElementById("error").innerHTML = errors;
+			return false;
+		} else {
+			$.ajax({
+				type: "POST",
+				url: 'process.php',
+				data: $("#contact_form").serialize(),
+				success: function(msg) {
+					if (msg == 'success') {
+						document.getElementById("error").style.display = "none";
+						document.getElementById("contact_name").value = "";
+						document.getElementById("contact_email").value = "";
+						document.getElementById("contact_subject").value = "";
+						document.getElementById("message").value = "";
+						$("#contact_form").hide();
+						document.getElementById("success").style.display = "block";
+						document.getElementById("success").innerHTML = "Thank You! We'll contact you shortly.";
+					} else {
+						document.getElementById("error").style.display = "block";
+						document.getElementById("error").innerHTML = "Oops! Something went wrong while prceeding.";
+					}
+				}
+			});
+		}
+	}(jQuery);
+	/////////////////////////////
+	/*MULTI TABS*/
+	////////////////////////////
+	/* jQuery activation and setting options for the tabs*/
+	var tabbedNav = $("#tabbed-nav").zozoTabs({
+		orientation: "horizontal",
+		theme: "silver",
+		position: "top-left",
+		size: "medium",
+		animation: {
+			duration: 600,
+			easing: "easeOutQuint",
+			effects: "fade"
+		},
+		defaultTab: "tab1"
+	});
+	/////////////////////////////
+	/*ACCORDIAN-TOGGLE*/
+	////////////////////////////	
+	$('.accordions').find('.accordions-toggle').on("click", function(e) {
+		//Expand or collapse this panel
+		$(this).next().slideToggle('fast');
+		//Hide the other panels
+		$(".accordions-content").not($(this).next()).slideUp('fast');
+		$(".fbutton").on( "click",function(e) {
+			$(this).addClass("fcurrent").siblings().removeClass("fcurrent");
+		});
+	});
+	
+	/////////////////////////////
+	/*CHANGING ANIMATION EFFECTS*/
+	////////////////////////////
+	
+	$("#config input.effects").on("change",function(e) {
+		var effects = $("input[type=radio]:checked").attr("id");
+		tabbedNav.data("zozoTabs").setOptions({
+			"animation": {
+				"effects": effects
+			}
+		});
+	});
+	
+	/////////////////////////////
+	/*VIDEOPOPUP*/
+	////////////////////////////
+
+	$("a.autoplay").VideoPopUp();
+	$("a.noautoplay").VideoPopUp({
+		autoplay: 0
+	}); // Disable autoplay
+	
+	/////////////////////////////
+	/*ALL CAROUSEL*/
+	////////////////////////////
+	
+	<!-- Home News-Posts Carousel -->
+	$("#owl-slider1").owlCarousel({
+		items: 3,
+		lazyLoad: true,
+		navigation: true
+	});
+	$("#owl-slider4").owlCarousel({
+		items: 3,
+		lazyLoad: true,
+		navigation: true
+	});
+	<!-- Testimonials Carousel -->
+	$("#owl-slider2").owlCarousel({
+		autoPlay: true,
+		loop: true,
+		stopOnHover: true,
+		paginationSpeed: 1000,
+		goToFirstSpeed: 2000,
+		singleItem: true,
+		autoHeight: true,
+	});
+	<!-- Mobile Menu -->
+	$("#menu").slicknav();
+	<!-- Team Detail -->
+	$("#team-detail").owlCarousel({
+		navigation: true,
+		slideSpeed: 300,
+		paginationSpeed: 400,
+		singleItem: true
+		// "singleItem:true" is a shortcut for:
+		// items : 1,
+		// itemsDesktop : false,
+		// itemsDesktopSmall : false,
+		// itemsTablet: false,
+		// itemsMobile : false
+	});
+	<!-- Home2 services slide Carousel -->
+	$("#services-slide").owlCarousel({
+		navigation: true,
+		slideSpeed: 300,
+		paginationSpeed: 400,
+		singleItem: true
+		// "singleItem:true" is a shortcut for:
+		// items : 1,
+		// itemsDesktop : false,
+		// itemsDesktopSmall : false,
+		// itemsTablet: false,
+		// itemsMobile : false
+	});
+	$("#services-slide2").owlCarousel({
+		navigation: false,
+		slideSpeed: 300,
+		paginationSpeed: 400,
+		singleItem: true
+		// "singleItem:true" is a shortcut for:
+		// items : 1,
+		// itemsDesktop : false,
+		// itemsDesktopSmall : false,
+		// itemsTablet: false,
+		// itemsMobile : false
+	});
+	<!-- Blog images slide Carousel -->
+	$("#blog-slide").owlCarousel({
+		navigation: true,
+		slideSpeed: 300,
+		paginationSpeed: 400,
+		singleItem: true
+		// "singleItem:true" is a shortcut for:
+		// items : 1,
+		// itemsDesktop : false,
+		// itemsDesktopSmall : false,
+		// itemsTablet: false,
+		// itemsMobile : false
+	});	
+		
+		
+	/////////////////////////////
+	/*PARTNERS*/
+	////////////////////////////
+	
+	$('.clients').owlCarousel({
+		autoPlay: true,
+		stopOnHover: true,
+		paginationSpeed: 1000,
+		goToFirstSpeed: 2000,
+		pagination: false,
+		autoHeight: true,
+		navText: ["<span class='lnr lnr-arrow-left'></span>", "<span class='lnr lnr-arrow-right'></span>"],
+		responsive: {
+			0: {
+				items: 1
+			},
+			800: {
+				items: 4
+			},
+			1600: {
+				items: 4
+			}
+		}
+	});
+	
+	/////////////////////////////
+	/*FANCYBOX*/
+	////////////////////////////
+	
+	$(".fancybox").fancybox();
+	
+	/////////////////////////////
+	/*single project*/
+	////////////////////////////		
+	$(".single-project").owlCarousel({
+		loop: true,
+		margin: 0,
+		nav: true,
+		autoplay: true,
+		autoplayTimeout: 5000,
+		pagination: false,
+		dots: false,
+		navText: ["<span class='lnr lnr-arrow-left'></span>", "<span class='lnr lnr-arrow-right'></span>"],
+		items: 1
+	});
+	
+	/////////////////////////////
+	/*PROGRESS BARS*/
+	////////////////////////////	
+	
+	setTimeout(function() {
+		$('.progress .progress-bar').each(function(e) {
+			var me = $(this);
+			var perc = me.attr("data-percentage");
+			//TODO: left and right text handling
+			var current_perc = 0;
+			var progress = setInterval(function(e) {
+				if (current_perc >= perc) {
+					clearInterval(progress);
+				} else {
+					current_perc += 1;
+					me.css('width', (current_perc) + '%');
+				}
+				var meandclass = me.find(".skills-percentage");
+				meandclass.text((current_perc) + '%');
+			}, 50);
+		});
+	}, 50);
+	
+})(jQuery);
